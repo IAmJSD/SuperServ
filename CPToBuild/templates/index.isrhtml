@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<title>$SERVER_NAME$ - Login</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+		<style>
+			.footer {
+			   position: fixed;
+			   left: 0;
+			   bottom: 0;
+			   width: 100%;
+			   text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="modal fade" id="pwdChangeModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Password Change Requirement</h4>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger d-none" id="pwdErrorAlert">
+							<strong>Error:</strong> You shouldn't see this.
+						</div>
+						<p>Your server administrator requires that you change your password.</p>
+						<div class="form-group">
+							<label for="newPwd">New Password:</label>
+							<input type="password" class="form-control" id="newPwd" placeholder="New Password">
+						</div>
+						<div class="form-group">
+							<label for="retypePwd">Retype Password:</label>
+							<input type="password" class="form-control" id="retypePwd" placeholder="Retype Password">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a type="button" class="btn btn-primary" href="javascript:runPwdReset()">Change Password</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="padding: 20px">
+			<h1>$SERVER_NAME$ - Login</h1>
+			<p>In order to proceed, please enter your username and password.</p>
+			<div class="alert alert-danger d-none" id="errorAlert">
+				<strong>Error:</strong> You shouldn't see this.
+			</div>
+			<div class="form-group">
+				<label for="usr">Username:</label>
+				<input type="text" class="form-control" id="usr" placeholder="Username">
+			</div>
+			<div class="form-group">
+				<label for="pwd">Password:</label>
+				<input type="password" class="form-control" id="pwd" placeholder="Password">
+			</div>
+			<a id="loginButton" class="btn btn-primary mb-2" href="javascript:runLogin()">Login</a>
+		</div>
+		
+		<div class="footer">
+			<p>This server is running software based off SuperServ. Copyright (C) Jake Gealer 2018-2019.</p>
+		</div>
+
+		<script>
+			var uid = null;
+			var oldPwd = null;
+			var usr = null;
+			// Defines the username/UID/old password for later.
+
+			function displayError(errorText) {
+				$("#errorAlert").html(`<strong>Error:</strong> ${errorText}`);
+				$("#errorAlert").removeClass("d-none");
+			};
+			// Displays the error.
+
+			function displayPwdResetError(errorText) {
+				$("#pwdErrorAlert").html(`<strong>Error:</strong> ${errorText}`);
+				$("#pwdErrorAlert").removeClass("d-none");
+			};
+			// Displays the password reset error.
+
+			async function runLogin() {
+				await $("#errorAlert").addClass("d-none");
+				var pwd = await $("#pwd").val();
+				usr = await $("#usr").val();
+				if (pwd === "" || usr === "") {
+					return displayError("Username or password field blank.");
+				}
+
+				try {
+					var res = await $.post("/api/v1/auth", {
+						username: usr,
+						password: pwd
+					});
+					if (res.type !== "SUCCESS") {
+						return displayError("Unknown instruction by the API.");
+					}
+					var cred = res.token;
+					document.cookie = `auth=${cred}`;
+					window.location.replace("/a");
+				} catch(res) {
+					if (res.responseJSON.type === "USR_MUST_CHANGE_PASSWORD") {
+						uid = res.responseJSON.user_uuid;
+						oldPwd = pwd;
+						await $("#pwdChangeModal").modal();
+					} else {
+						displayError(res.responseJSON.message);
+					}
+				}
+			}
+			// Runs the login.
+
+			async function runPwdReset() {
+				await $("#pwdErrorAlert").addClass("d-none");
+				var newPwd = await $("#newPwd").val();
+				if (newPwd !== await $("#retypePwd").val()) {
+					return displayPwdResetError("Passwords do not match.");
+				}
+
+				try {
+					var res = await $.post("/api/v1/user/edit", {
+						user_uuid: uid,
+						password: oldPwd,
+						new_password: newPwd
+					});
+					if (res.type !== "SUCCESS") {
+						return displayError("Unknown instruction by the API.");
+					}
+				} catch(res) {
+					return displayPwdResetError(res.responseJSON.requested_edits.new_password.message);
+				}
+
+				var res_ = await $.post("/api/v1/auth", {
+					username: usr,
+					password: newPwd
+				});
+				if (res_.type !== "SUCCESS") {
+					return displayPwdResetError("Unknown instruction by the API.");
+				}
+				var cred = res_.token;
+				document.cookie = `auth=${cred}`;
+				window.location.replace("/a");
+			}
+			// Runs the password reset.
+
+			$("#pwd").keypress(async event => {
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+				if (keycode == '13') {
+					runLogin();
+				};
+			});
+			// The enter shortcut to login.
+
+			$("#retypePwd").keypress(async event => {
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+				if (keycode == '13') {
+					runPwdReset();
+				};
+			});
+			// The enter shortcut to password resetting.
+
+			// TODO: Make it auto-focus on credential fields.
+		</script>
+	</body>
+</html>
