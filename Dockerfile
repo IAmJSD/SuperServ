@@ -1,6 +1,8 @@
 FROM microsoft/dotnet:2.1.502-sdk-stretch
 MAINTAINER jake@gealer.email
 EXPOSE 8080
+WORKDIR /var/superserv
+RUN cd /var/superserv
 COPY . .
 RUN sh ./build.sh
 RUN chmod 777 ./releases/linux/SuperServ
