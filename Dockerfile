@@ -8,6 +8,4 @@ RUN tr -d '\r' < build.sh > build.fix.sh
 RUN rm build.sh
 RUN mv build.fix.sh build.sh
 RUN sh ./build.sh
-RUN cd ./releases/linux/
-RUN chmod +x ./SuperServ
-ENTRYPOINT ./SuperServ
+ENTRYPOINT cd ./releases/linux/ && ./SuperServ
