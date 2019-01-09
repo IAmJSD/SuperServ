@@ -5,6 +5,5 @@ WORKDIR /var/superserv
 RUN cd /var/superserv
 COPY . .
 RUN sh ./build.sh
-RUN chmod 777 ./releases/linux/SuperServ
 RUN cd ./releases/linux/
 ENTRYPOINT ./SuperServ
