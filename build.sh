@@ -11,3 +11,6 @@ echo "Copying contents of the \"CPToBuild\" folder into each release."
 cp -a ./CPToBuild/. ./releases/mac
 cp -a ./CPToBuild/. ./releases/windows
 cp -a ./CPToBuild/. ./releases/linux
+echo "Granting execution rights."
+chmod 777 ./releases/mac/SuperServ
+chmod 777 ./releases/linux/SuperServ
