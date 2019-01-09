@@ -9,5 +9,5 @@ RUN rm build.sh
 RUN mv build.fix.sh build.sh
 RUN sh ./build.sh
 RUN cd ./releases/linux/
-RUN chmod 777 ./SuperServ
+RUN chmod +x ./SuperServ
 ENTRYPOINT ./SuperServ
