@@ -4,7 +4,9 @@ EXPOSE 8080
 WORKDIR /var/superserv
 RUN cd /var/superserv
 COPY . .
-RUN sh ./remove_slash_r.sh
+RUN tr -d '\r' < build.sh > build.fix.sh
+RUN rm build.sh
+RUN mv build.fix.sh build.sh
 RUN sh ./build.sh
 RUN cd ./releases/linux/
 ENTRYPOINT ./SuperServ
