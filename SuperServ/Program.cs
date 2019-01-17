@@ -21,8 +21,10 @@ namespace SuperServ
             hostConf.UrlReservations.CreateAutomatically = true;
             NancyHost nancy = new NancyHost(hostConf, new Uri($"http://localhost:{config_handler.config.port}"));
             nancy.Start();
-            Console.WriteLine($"Serving on port {config_handler.config.port}. Press ENTER or CTRL+C to stop.");
-            Console.ReadLine();
+            Console.WriteLine($"Serving on port {config_handler.config.port}. Press CTRL+C or kill the container if this is running in a container to stop.");
+            while (true) {
+                Console.ReadLine();
+            }
             nancy.Stop();
         }
     }
