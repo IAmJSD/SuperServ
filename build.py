@@ -6,30 +6,33 @@ from distutils.dir_util import copy_tree
 from os import chmod
 # Handles the imports.
 
-mk_release = lambda folder_name, arch: call(["dotnet", "publish", "-c", "Release", "--self-contained", "-r", arch, "--output", "../releases/" + folder_name])
-# Makes the specified release.
-
 print("Running .NET Core restore.")
 call(["dotnet", "restore"])
 # Restores the .NET Core package.
 
-print("Building Windows release.")
-mk_release("windows", "win10-x64")
-# Builds a Windows release.
+mk_release = lambda folder_name, arch: call(["dotnet", "publish", "-c", "Release", "--self-contained", "-r", arch, "--output", "../releases/" + folder_name])
+# Makes the specified release.
 
-print("Building Ubuntu 16.10 release.")
-mk_release("linux", "ubuntu.16.10-x64")
-# Builds a Ubuntu 16.10 release.
+releases = {
+    "windows": ["Windows", "win10-x64"],
+    "linux": ["Ubuntu 16.10", "ubuntu.16.10-x64"],
+    "mac": ["macOS", "osx.10.14-x64"]
+}
+# Defines all of the releases
 
-print("Building macOS release.")
-mk_release("mac", "osx.10.14-x64")
-# Builds a macOS release.
+for r in releases:
+    r_info = releases[r]
+    nice_name = r_info[0]
+    arch = r_info[1]
+    print("Building %s release." % nice_name)
+    mk_release(r, arch)
+# Handles all of the releases.
 
-folders = ["./releases/windows", "./releases/mac", "./releases/linux"]
-# Defines all of the folders.
+release_folders = ["./releases/%s" % r for r in releases]
+# Defines all of the release folders.
 
 print("Copying contents of the \"CPToBuild\" folder into each release.")
-for f in folders:
+for f in release_folders:
     copy_tree("./CPToBuild", f)
 # Copies the contents of "CPToBuild" into each release.
 
