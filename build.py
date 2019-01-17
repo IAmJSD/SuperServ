@@ -25,7 +25,7 @@ print("Building macOS release.")
 mk_release("mac", "osx.10.14-x64")
 # Builds a macOS release.
 
-folders = ["../releases/windows", "../releases/mac", "../releases/linux"]
+folders = ["./releases/windows", "./releases/mac", "./releases/linux"]
 # Defines all of the folders.
 
 print("Copying contents of the \"CPToBuild\" folder into each release.")
