@@ -63,6 +63,7 @@ namespace SuperServ
     public class CredentialResetOptions
     {
         public bool enabled { get; set; }
+        public string default_provider { get; set; }
         public MailGunOptions mailgun { get; set; }
         public SendgridOptions sendgrid { get; set; }
     }
