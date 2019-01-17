@@ -1,5 +1,4 @@
 FROM microsoft/dotnet:2.1.502-sdk-stretch
-MAINTAINER jake@gealer.email
 EXPOSE 8080
 WORKDIR /var/superserv
 RUN cd /var/superserv
