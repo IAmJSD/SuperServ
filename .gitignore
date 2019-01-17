@@ -26,3 +26,23 @@ SuperServ/obj/Release/netcoreapp2\.1/win10-x64/
 *.cache
 
 SuperServ/obj/SuperServ\.csproj\.nuget\.g\.props
+
+releases/linux_arm/
+
+releases/linux_x64/
+
+releases/windows_x64/
+
+releases/windows_x86/
+
+SuperServ/bin/Release/netcoreapp2\.1/ubuntu\.16\.04-arm/
+
+SuperServ/bin/Release/netcoreapp2\.1/win10-x86/
+
+SuperServ/obj/netcoreapp2\.1/ubuntu\.16\.04-arm/host/
+
+SuperServ/obj/netcoreapp2\.1/win10-x86/host/
+
+SuperServ/obj/Release/netcoreapp2\.1/ubuntu\.16\.04-arm/
+
+SuperServ/obj/Release/netcoreapp2\.1/win10-x86/

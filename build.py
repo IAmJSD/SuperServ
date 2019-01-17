@@ -14,8 +14,10 @@ mk_release = lambda folder_name, arch: call(["dotnet", "publish", "-c", "Release
 # Makes the specified release.
 
 releases = {
-    "windows": ["Windows", "win10-x64"],
-    "linux": ["Ubuntu 16.10", "ubuntu.16.10-x64"],
+    "windows_x64": ["Windows x64", "win10-x64"],
+    "windows_x86": ["Windows x86", "win10-x86"],
+    "linux_x64": ["Ubuntu 16.10 x64", "ubuntu.16.10-x64"],
+    "linux_arm": ["Ubuntu 16.04 ARM", "ubuntu.16.04-arm"],
     "mac": ["macOS", "osx.10.14-x64"]
 }
 # Defines all of the releases
@@ -38,5 +40,6 @@ for f in release_folders:
 
 print("Granting execution rights.")
 chmod("./releases/mac/SuperServ", 0o777)
-chmod("./releases/linux/SuperServ", 0o777)
+chmod("./releases/linux_x64/SuperServ", 0o777)
+chmod("./releases/linux_arm/SuperServ", 0o777)
 # Grants execution rights to things that need it.
