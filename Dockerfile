@@ -3,6 +3,6 @@ EXPOSE 8080
 WORKDIR /var/superserv
 RUN cd /var/superserv
 COPY . .
-RUN /usr/bin/python2.7 ./build.py
+RUN /usr/bin/python2.7 ./build.py linux_x64
 ENV CONFIG_PATH "/etc/superserv_config.json"
 ENTRYPOINT cd ./releases/linux_x64/ && ./SuperServ

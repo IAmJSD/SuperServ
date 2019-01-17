@@ -4,6 +4,7 @@ from __future__ import print_function
 from subprocess import call
 from distutils.dir_util import copy_tree
 from os import chmod
+import sys
 # Handles the imports.
 
 print("Running .NET Core restore.")
@@ -21,6 +22,16 @@ releases = {
     "mac": ["macOS", "osx.10.14-x64"]
 }
 # Defines all of the releases
+
+if len(sys.argv) != 1:
+    key = sys.argv[1]
+    if key not in releases:
+        print("Invalid release.")
+        sys.exit(1)
+    item = releases[key]
+    releases.clear()
+    releases[key] = item
+# Handles if the user gives a specific release as an argument.
 
 for r in releases:
     r_info = releases[r]
