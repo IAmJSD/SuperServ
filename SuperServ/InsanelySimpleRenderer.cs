@@ -6,12 +6,12 @@ namespace SuperServ
 {
     class InsanelySimpleRenderer
     {
-        // <summary>
-        // The goal of this renderer is to just be as quick as possible.
-        // This is NOT designed for rendering every page. Just pages with a very small amount of elements that need rendering.
-        // \$[a-zA-Z0-9-_]+\$ - This regex will pick up and use the text inside as a dictionary key. It will escape the dictionary value.
-        // ![a-zA-Z0-9-_]+! - This regex will pick up and use the text inside as a dictionary key. It will NOT escape the dictionary value.
-        // </summary>
+        /// <summary>
+        /// The goal of this renderer is to just be as quick as possible.
+        /// This is NOT designed for rendering every page. Just pages with a very small amount of elements that need rendering.
+        /// \$[a-zA-Z0-9-_]+\$ - This regex will pick up and use the text inside as a dictionary key. It will escape the dictionary value.
+        /// ![a-zA-Z0-9-_]+! - This regex will pick up and use the text inside as a dictionary key. It will NOT escape the dictionary value.
+        /// </summary>
         public static Regex DollarRegex = new Regex("\\$[a-zA-Z0-9-_]+\\$");
         public static Regex ExclamationMarkRegex = new Regex("![a-zA-Z0-9-_]+!");
         public static Dictionary<string, string> HTMLEscapes = new Dictionary<string, string>

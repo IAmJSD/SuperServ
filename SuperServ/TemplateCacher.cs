@@ -6,10 +6,10 @@ namespace SuperServ
 {
     class TemplateCacher
     {
-        // <summary>
-        // The purpose of this class is extremely simple.
-        // This class is used to cache the templates. This helps to lower disk usage.
-        // </summary>
+        /// <summary>
+        /// The purpose of this class is extremely simple.
+        /// This class is used to cache the templates. This helps to lower disk usage.
+        /// </summary>
         public static Dictionary<string, string> CachedData = new Dictionary<string, string>();
 
         public static string ReadTemplate(string path)
