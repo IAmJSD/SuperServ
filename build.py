@@ -23,12 +23,14 @@ releases = {
 }
 # Defines all of the releases
 
+specific_release = None
 if len(sys.argv) != 1:
     key = sys.argv[1]
     if key not in releases:
         print("Invalid release.")
         sys.exit(1)
     item = releases[key]
+    specific_release = key
     releases.clear()
     releases[key] = item
 # Handles if the user gives a specific release as an argument.
@@ -41,7 +43,7 @@ for r in releases:
     mk_release(r, arch)
 # Handles all of the releases.
 
-release_folders = ["./releases/%s" % r for r in releases]
+release_folders = ["./releases/%s" % r for r in releases if not specific_release or r == specific_release]
 # Defines all of the release folders.
 
 print("Copying contents of the \"CPToBuild\" folder into each release.")
@@ -49,8 +51,11 @@ for f in release_folders:
     copy_tree("./CPToBuild", f)
 # Copies the contents of "CPToBuild" into each release.
 
+release_exec_rights = ["mac", "linux_x64", "linux_arm"]
+# The releases that need execution rights.
+
 print("Granting execution rights.")
-chmod("./releases/mac/SuperServ", 0o777)
-chmod("./releases/linux_x64/SuperServ", 0o777)
-chmod("./releases/linux_arm/SuperServ", 0o777)
+for i in release_exec_rights:
+    if not specific_release or i == specific_release:
+        chmod("./releases/%s/SuperServ" % i, 0o777)
 # Grants execution rights to things that need it.
