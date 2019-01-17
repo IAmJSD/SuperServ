@@ -2,5 +2,4 @@ language: csharp
 mono: none
 dotnet: 2.1.502
 script:
-    - sh ./remove_slash_r.sh
-    - sh ./build.sh
+    - /usr/bin/python2.7 ./build.py

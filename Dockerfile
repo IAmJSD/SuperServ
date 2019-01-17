@@ -3,8 +3,5 @@ EXPOSE 8080
 WORKDIR /var/superserv
 RUN cd /var/superserv
 COPY . .
-RUN tr -d '\r' < build.sh > build.fix.sh
-RUN rm build.sh
-RUN mv build.fix.sh build.sh
-RUN sh ./build.sh
+RUN /usr/bin/python2.7 ./build.py
 ENTRYPOINT cd ./releases/linux/ && ./SuperServ
