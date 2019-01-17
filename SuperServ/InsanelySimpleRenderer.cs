@@ -20,7 +20,8 @@ namespace SuperServ
             { ">", "&gt;" },
             { "&", "&amp;" },
             { "\"", "&quot;" },
-            { "'", "&apos" }
+            { "'", "&apos;" },
+            { "$", "&#36;" }
         };
 
         public static Nancy.Response Render(string html_data, Dictionary<string, string> replacement_data, Nancy.HttpStatusCode status = Nancy.HttpStatusCode.OK)
@@ -39,7 +40,7 @@ namespace SuperServ
             {
                 string MatchKey = match.Value.Trim('!');
                 string MatchResult = replacement_data[MatchKey];
-                html_data = html_data.Replace(match.Value, MatchResult);
+                html_data = html_data.Replace(match.Value, MatchResult.Replace("!", "&#33;"));
             }
             return new Nancy.Response()
             {
