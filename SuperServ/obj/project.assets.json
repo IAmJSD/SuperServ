@@ -7394,11 +7394,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jake Gealer\\Desktop\\SuperServ\\SuperServ\\SuperServ.csproj",
+      "projectUniqueName": "G:\\Documents\\GitKraken\\SuperServ\\SuperServ\\SuperServ.csproj",
       "projectName": "SuperServ",
-      "projectPath": "C:\\Users\\Jake Gealer\\Desktop\\SuperServ\\SuperServ\\SuperServ.csproj",
+      "projectPath": "G:\\Documents\\GitKraken\\SuperServ\\SuperServ\\SuperServ.csproj",
       "packagesPath": "C:\\Users\\Jake Gealer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jake Gealer\\Desktop\\SuperServ\\SuperServ\\obj\\",
+      "outputPath": "G:\\Documents\\GitKraken\\SuperServ\\SuperServ\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
