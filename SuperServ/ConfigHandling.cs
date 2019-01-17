@@ -14,6 +14,8 @@ namespace SuperServ
     {
         public Config config;
 
+        public string ConfigLocation;
+
         public void CreateNewConfig()
         {
             int unix_timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
@@ -110,7 +112,7 @@ namespace SuperServ
             try
             {
                 string data = JsonConvert.SerializeObject(config, Formatting.Indented);
-                FileStream file = File.Open("config.json", FileMode.Create);
+                FileStream file = File.Open(ConfigLocation, FileMode.Create);
                 file.Write(Encoding.UTF8.GetBytes(data));
                 file.Close();
             } catch(Exception) {
@@ -121,9 +123,14 @@ namespace SuperServ
 
         public void LoadConfig()
         {
+            ConfigLocation = Environment.GetEnvironmentVariable("CONFIG_LOCATION");
+            if (ConfigLocation == null) {
+                ConfigLocation = "config.json";
+            }
+
             try
             {
-                using (StreamReader r = new StreamReader("config.json"))
+                using (StreamReader r = new StreamReader(ConfigLocation))
                 {
                     string json = r.ReadToEnd();
                     config = JsonConvert.DeserializeObject<Config>(json);
