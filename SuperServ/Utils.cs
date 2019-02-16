@@ -50,15 +50,7 @@ namespace SuperServ
     {
         public static BasicFileFolderInfo GetFile(string uid, User user, string path)
         {
-            char SlashType;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                SlashType = '\\';
-            }
-            else
-            {
-                SlashType = '/';
-            }
+            char SlashType = '/';
 
             if (path.EndsWith(SlashType))
             {
@@ -101,15 +93,7 @@ namespace SuperServ
 
         public static UserPathExt GetPath(string uid, User user, string path)
         {
-            char SlashType;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                SlashType = '\\';
-            }
-            else
-            {
-                SlashType = '/';
-            }
+            char SlashType = '/';
 
             if (path.EndsWith(SlashType))
             {
@@ -120,7 +104,7 @@ namespace SuperServ
 
             foreach (UserPath usr_path in allowed_paths)
             {
-                if (!path.ToLower().StartsWith(usr_path.real_path.ToLower()))
+                if (!path.ToLower().TrimStart('/').StartsWith(usr_path.real_path.TrimStart('/').ToLower()))
                 {
                     continue;
                 }
@@ -130,14 +114,14 @@ namespace SuperServ
                 while (true)
                 {
                     bool further = false;
-                    if (end_path.real_path.ToLower() == path.ToLower())
+                    if (end_path.real_path.TrimStart('/').ToLower() == path.TrimStart('/').ToLower())
                     {
                         match = true;
                         break;
                     }
                     foreach (UserPath child in end_path.children)
                     {
-                        if (path.ToLower().StartsWith(child.real_path.ToLower()))
+                        if (path.TrimStart('/').ToLower().StartsWith(child.real_path.TrimStart('/').ToLower()))
                         {
                             further = true;
                             end_path = child;

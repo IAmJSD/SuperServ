@@ -91,7 +91,7 @@ namespace SuperServ
             });
             // The authenticated route for showing files/folders.
 
-            Get("/f/{path}", async args =>
+            Get("/f/{path*}", async args =>
             {
                 var user_tuple = CheckAuthCookie(Context);
                 if (user_tuple.Item1 == null)
@@ -101,17 +101,9 @@ namespace SuperServ
                 string uuid = user_tuple.Item1;
                 User user = user_tuple.Item2;
 
-                string b64;
-                try
-                {
-                    b64 = Encoding.UTF8.GetString(Convert.FromBase64String(args.path));
-                }
-                catch (Exception)
-                {
-                    return "Invalid file path.";
-                }
+                string data = args.path;
 
-                var file_info = Utils.GetFile(uuid, user, b64);
+                var file_info = Utils.GetFile(uuid, user, data);
                 if (file_info == null)
                 {
                     return "Either the file was not found or you do not have permission to read it.";
