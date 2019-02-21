@@ -151,12 +151,14 @@
 			}
 			// Runs the password reset.
 
-			$("#pwd").keypress(async event => {
+			var keycodeLogin = async event => {
 				var keycode = (event.keyCode ? event.keyCode : event.which);
 				if (keycode == '13') {
 					runLogin();
 				};
-			});
+			};
+			$("#pwd").keypress(keycodeLogin);
+			$("#usr").keypress(keycodeLogin);
 			// The enter shortcut to login.
 
 			$("#retypePwd").keypress(async event => {
