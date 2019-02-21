@@ -50,3 +50,5 @@ SuperServ/obj/Release/netcoreapp2\.1/win10-x86/
 \.vscode/
 
 SuperServ/obj/
+
+\.DS_Store
