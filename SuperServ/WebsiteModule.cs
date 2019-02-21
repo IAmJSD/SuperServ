@@ -69,10 +69,16 @@ namespace SuperServ
                 {
                     return new Nancy.Responses.RedirectResponse("/a");
                 }
-                return InsanelySimpleRenderer.Render(TemplateCacher.ReadTemplate("./templates/index.isrhtml"), new Dictionary<string, string>()
+                var template = TemplateCacher.ReadTemplate("./templates/index.html");
+                return new Nancy.Response
                 {
-                    { "SERVER_NAME", Program.config_handler.config.server_name }
-                });
+                    StatusCode = Nancy.HttpStatusCode.OK,
+                    ContentType = "text/html",
+                    Contents = stream => (new StreamWriter(stream) { AutoFlush = true }).Write(template.Render(new
+                    {
+                        Name = Program.config_handler.config.server_name
+                    }))
+                };
             });
             // Renders the login page (or redirects if there is a session cookie).
 

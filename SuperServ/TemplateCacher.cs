@@ -8,11 +8,11 @@ namespace SuperServ
     {
         /// <summary>
         /// The purpose of this class is extremely simple.
-        /// This class is used to cache the templates. This helps to lower disk usage.
+        /// This class is used to cache the templates. This helps to lower disk usage and make pages load quicker.
         /// </summary>
-        public static Dictionary<string, string> CachedData = new Dictionary<string, string>();
+        public static Dictionary<string, Scriban.Template> CachedData = new Dictionary<string, Scriban.Template>();
 
-        public static string ReadTemplate(string path)
+        public static Scriban.Template ReadTemplate(string path)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace SuperServ
             } catch (Exception) {
                 // Do nothing.
             }
-            string content = File.ReadAllText(path);
+            Scriban.Template content = Scriban.Template.Parse(File.ReadAllText(path));
             CachedData[path] = content;
             return content;
         }
