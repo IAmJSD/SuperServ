@@ -90,7 +90,6 @@ namespace SuperServ
 
         public static async Task<GenericAPIResponse> ChangePassword(UserEditPOST user_data)
         {
-            // TODO: NEW PASSWORD SHOULD KILL ALL COOKIES BUT ACTIVE ONE!
             if (user_data.new_password == "")
             {
                 return new GenericAPIResponse()
@@ -117,6 +116,11 @@ namespace SuperServ
                     type = "PWD_ERR",
                     message = "The password given has been in a data breach that was indexed by <a href=\"https://haveibeenpwned.com\">Have I Been Pwned</a>."
                 };
+            }
+            foreach (var token_kv_pair in Program.config_handler.config.access_tokens) {
+                if (token_kv_pair.Value.user_id == user_data.user_uuid) {
+                    Program.config_handler.config.access_tokens.Remove(token_kv_pair.Key);
+                }
             }
             Program.config_handler.config.users[user_data.user_uuid].password = BCrypt.Net.BCrypt.HashPassword(user_data.new_password);
             Program.config_handler.config.users[user_data.user_uuid].must_change_password = false;
