@@ -121,6 +121,21 @@ namespace SuperServ
                 return response.AsAttachment(file_info.name);
             });
             // Handles file downloading.
+
+            Get("/logout", async _ => {
+                var user_tuple = CheckAuthCookie(Context);
+                if (user_tuple.Item1 == null)
+                {
+                    return await DeauthAndRedirect("../", Context);
+                }
+
+                var cookie = Context.Request.Cookies["auth"];
+                Program.config_handler.config.access_tokens.Remove(cookie);
+                Program.config_handler.SaveConfig();
+
+                return await DeauthAndRedirect("../", Context);
+            });
+            // Logs out the user.
         }
     }
 }
