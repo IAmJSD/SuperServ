@@ -76,7 +76,7 @@ namespace SuperServ
                     ContentType = "text/html",
                     Contents = stream => (new StreamWriter(stream) { AutoFlush = true }).Write(template.Render(new
                     {
-                        Name = Program.config_handler.config.server_name
+                        Name = XSSPrevention.XSSParse(Program.config_handler.config.server_name)
                     }))
                 };
             });
