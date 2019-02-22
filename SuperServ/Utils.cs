@@ -102,49 +102,69 @@ namespace SuperServ
 
             List<UserPath> allowed_paths = Program.config_handler.GetPathPerms(uid, user);
 
+            var PathSplit = path.TrimStart(SlashType).Split(SlashType).ToList();
+
+            if (PathSplit.Count == 0) {
+                return null;
+            }
+
             foreach (UserPath usr_path in allowed_paths)
             {
-                if (!path.ToLower().TrimStart('/').StartsWith(usr_path.real_path.TrimStart('/').ToLower()))
+                if (PathSplit[0].ToLower() != usr_path.name.ToLower())
                 {
                     continue;
                 }
 
+                // This starts with the allowed path.
+
+                PathSplit.RemoveAt(0);
+                // Lets remove this part. We only care about the children in this now.
+
                 UserPath end_path = usr_path;
-                bool match = false;
-                while (true)
-                {
+                // This defines the end path.
+
+                bool Inherit = false;
+                // Defines whether to inherit permissions.
+
+                while (PathSplit.Count != 0) {
+                    // This will cycle while the list isn't empty.
+
+                    string NextChild = PathSplit[0];
+                    // Defines the next child.
+
                     bool further = false;
-                    if (end_path.real_path.TrimStart('/').ToLower() == path.TrimStart('/').ToLower())
-                    {
-                        match = true;
-                        break;
-                    }
+                    // Defines if the for loop actually gets us any further.
+
                     foreach (UserPath child in end_path.children)
                     {
-                        if (path.TrimStart('/').ToLower().StartsWith(child.real_path.TrimStart('/').ToLower()))
-                        {
-                            further = true;
+                        if (child.name.ToLower() == NextChild.ToLower()) {
+                            // This child is the next match, lets make this the end path and break this for loop.
                             end_path = child;
+                            further = true;
                             break;
                         }
                     }
-                    if (!further)
-                    {
+
+                    if (!further) {
+                        // We are NOT further despite cycling through all of the children, time to break and inherit.
+                        Inherit = true;
                         break;
                     }
+
+                    PathSplit.RemoveAt(0);
+                    // Removes the first item from the array.
                 }
-                if (!match)
-                {
-                    var path_split = path.Split(SlashType);
-                    end_path = new UserPath()
-                    {
-                        children = end_path.children,
+
+                if (Inherit) {
+                    // This is where we actually handle inheriting the permissions.
+                    end_path = new UserPath() {
+                        children = new List<UserPath>(),
                         delete_folder = end_path.delete_folder,
                         delete_inside = end_path.delete_inside,
-                        name = path_split[path_split.Length - 1],
+                        name = PathSplit[PathSplit.Count - 1],
                         read = end_path.read,
                         write = end_path.write,
-                        real_path = path
+                        real_path = end_path.real_path + SlashType + String.Join(SlashType, PathSplit)
                     };
                 }
 

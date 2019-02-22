@@ -404,26 +404,12 @@ namespace SuperServ
             });
             // Displays all of the paths.
 
-            Get("/user/path/{path}", async args =>
+            Get("/user/path/{path*}", async args =>
             {
                 AuthCheckInternalResponse AuthHeaderCheck = CheckAuthHeader(Context);
                 if (!AuthHeaderCheck.authed)
                 {
                     return await AuthHeaderCheck.err;
-                }
-                string b64;
-                try
-                {
-                    b64 = Encoding.UTF8.GetString(Convert.FromBase64String(args.path));
-                }
-                catch (Exception)
-                {
-                    return await AsErrorObject(Nancy.HttpStatusCode.BadRequest, new
-                    {
-                        success = false,
-                        type = "BAD_B64",
-                        message = "Couldn't decode the Base 64 given. Make sure it is Base 64 encoded UTF-8."
-                    });
                 }
                 User user = Program.config_handler.config.users[AuthHeaderCheck.access_token_pair.Value.user_id];
                 if (user.disabled)
@@ -435,7 +421,7 @@ namespace SuperServ
                         message = "Your user account is disabled. Please contact the server administrator for more information."
                     });
                 }
-                return Utils.GetPath(AuthHeaderCheck.access_token_pair.Key, user, b64);
+                return Utils.GetPath(AuthHeaderCheck.access_token_pair.Key, user, args.path);
             });
             // Displays more info about a specific path.
         }
