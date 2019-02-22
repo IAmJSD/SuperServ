@@ -132,18 +132,22 @@ namespace SuperServ
                     string NextChild = PathSplit[0];
                     // Defines the next child.
 
+                    bool further = false;
+                    // Defines if the for loop actually gets us any further.
+
                     foreach (UserPath child in end_path.children)
                     {
                         if (child.name.ToLower() == NextChild.ToLower()) {
                             // This child is the next match, lets make this the end path and break this for loop.
                             end_path = child;
-                            Inherit = true;
+                            further = true;
                             break;
                         }
                     }
 
-                    if (Inherit) {
+                    if (!further) {
                         // We are NOT further despite cycling through all of the children, time to break and inherit.
+                        Inherit = true;
                         break;
                     }
 
