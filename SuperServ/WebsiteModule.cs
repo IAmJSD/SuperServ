@@ -82,7 +82,7 @@ namespace SuperServ
             });
             // Renders the login page (or redirects if there is a session cookie).
 
-            Get("/a/{path_info?}", async args => {
+            Get("/a/{path_info*}", async args => {
                 var user_tuple = CheckAuthCookie(Context);
                 if (user_tuple.Item1 == null)
                 {
@@ -91,11 +91,28 @@ namespace SuperServ
                 string uuid = user_tuple.Item1;
                 User user = user_tuple.Item2;
 
-                bool root = args.path_info == null;
-
-                return "hi";
+                var template = TemplateCacher.ReadTemplate("./templates/dashboard.html");
+                return new Nancy.Response
+                {
+                    StatusCode = Nancy.HttpStatusCode.OK,
+                    ContentType = "text/html",
+                    Contents = stream => (new StreamWriter(stream) { AutoFlush = true }).Write(template.Render(new
+                    {
+                        Name = XSSPrevention.XSSParse(Program.config_handler.config.server_name),
+                        Username = XSSPrevention.XSSParse(user.username)
+                    }))
+                };
             });
             // The authenticated route for showing files/folders.
+
+            Get("/static/{static_path*}", args => {
+                string StaticArgs = args.static_path;
+                string[] ArgsSplit = StaticArgs.Split('/');
+                string Name = ArgsSplit[ArgsSplit.Length - 1];
+                var response = new Nancy.Responses.StreamResponse(() => new FileStream("./static/" + StaticArgs, FileMode.Open), MimeTypes.GetMimeType(Name));
+                return response.AsAttachment(Name);
+            });
+            // Gets any static objects.
 
             Get("/f/{path*}", async args =>
             {
