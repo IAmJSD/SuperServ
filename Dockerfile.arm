@@ -5,4 +5,5 @@ RUN cd /var/superserv
 COPY . .
 RUN /usr/bin/python2.7 ./build.py linux_arm
 ENV CONFIG_PATH "/etc/superserv_config.json"
+ENV IN_DOCKER_CONTAINER "true"
 ENTRYPOINT cd ./releases/linux_arm/ && ./SuperServ

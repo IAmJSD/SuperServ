@@ -8,6 +8,7 @@ namespace SuperServ
     class Program
     {
         public static ConfigHandling config_handler;
+        public static bool InDockerContainer;
         static void Main(string[] args)
         {
             RegexCompilations.LoadRegex();
@@ -21,7 +22,12 @@ namespace SuperServ
             hostConf.UrlReservations.CreateAutomatically = true;
             NancyHost nancy = new NancyHost(hostConf, new Uri($"http://localhost:{config_handler.config.port}"));
             nancy.Start();
-            Console.WriteLine($"Serving on port {config_handler.config.port}. Press CTRL+C or kill the container if this is running in Docker to stop.");
+            InDockerContainer = Environment.GetEnvironmentVariable("IN_DOCKER_CONTAINER") == "true";
+            string killMessage = "Press CTRL+C to stop.";
+            if (InDockerContainer) {
+                killMessage = "Shut down the Docker container to stop.";
+            }
+            Console.WriteLine($"Serving on port {config_handler.config.port}. {killMessage}");
             while (true) {
                 Console.ReadLine();
             }
