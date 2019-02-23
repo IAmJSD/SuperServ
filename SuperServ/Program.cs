@@ -31,6 +31,7 @@ namespace SuperServ
             while (true) {
                 Console.ReadLine();
             }
+            nancy.Stop();
         }
     }
 }
