@@ -13,7 +13,9 @@ namespace SuperServ
                 .Replace("<", "&lt;")
                 .Replace(">", "&gt;")
                 .Replace("'", "&#39;")
-                .Replace("\"", "&#34;");
+                .Replace("\"", "&#34;")
+                .Replace("{", "&#123;")
+                .Replace("}", "&#125;");
         }
     }
 }
